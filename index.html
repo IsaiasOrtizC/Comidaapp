@@ -8,377 +8,308 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-:root {
-  --brand:#FF5C00; --brand2:#FF8C42; --brand-bg:#FFF3ED;
-  --yellow:#FFD84D; --green:#00B37D; --green-bg:#E6F9F3;
-  --purple:#7C5CBF; --purple-bg:#F0ECFA;
-  --ink:#14110F; --ink2:#4A453F; --ink3:#9A948C;
-  --surface:#FFFFFF; --bg:#F8F5F1; --border:#EDE8E2;
-  --r-sm:12px; --r-md:18px; --r-lg:24px; --r-xl:32px;
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --brand:#FF5C00;--brand2:#FF8C42;--brand-bg:#FFF3ED;
+  --yellow:#FFD84D;--green:#00B37D;--green-bg:#E6F9F3;
+  --purple:#7C5CBF;--purple-bg:#F0ECFA;
+  --ink:#14110F;--ink2:#4A453F;--ink3:#9A948C;
+  --surface:#FFF;--bg:#F8F5F1;--border:#EDE8E2;
+  --rsm:12px;--rmd:18px;--rlg:24px;--rxl:32px;
 }
-html { scroll-behavior:smooth; }
-body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:var(--ink); min-height:100vh; overflow-x:hidden; }
-.screen { display:none; min-height:100vh; flex-direction:column; }
-.screen.active { display:flex; }
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden}
 
-.bottom-nav {
-  position:fixed; bottom:0; left:0; right:0; z-index:200;
-  background:var(--surface); border-top:1px solid var(--border);
-  display:flex; padding-bottom:env(safe-area-inset-bottom);
-}
-@media(min-width:768px){ .bottom-nav{display:none;} }
-.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; padding:10px 0 6px; gap:3px; cursor:pointer; color:var(--ink3); font-size:10px; font-weight:600; letter-spacing:.3px; text-transform:uppercase; transition:color .2s; }
-.nav-item.active { color:var(--brand); }
-.nav-icon { font-size:22px; line-height:1; }
+/* SCREENS */
+.screen{display:none;flex-direction:column;min-height:100vh}
+.screen.active{display:flex}
 
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--surface);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+@media(min-width:768px){.bnav{display:none!important}}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 0 6px;gap:3px;cursor:pointer;color:var(--ink3);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.3px;transition:color .2s}
+.ni.active{color:var(--brand)}
+.ni-icon{font-size:22px;line-height:1}
+
+/* SIDEBAR desktop */
 @media(min-width:768px){
-  .sidebar { width:240px; flex-shrink:0; background:var(--surface); border-right:1px solid var(--border); padding:32px 20px; position:fixed; top:0; left:0; bottom:0; display:flex; flex-direction:column; gap:6px; z-index:100; }
-  .sidebar-brand { display:flex; align-items:center; gap:10px; margin-bottom:32px; padding:0 8px; }
-  .sidebar-brand .logo { width:38px; height:38px; border-radius:12px; background:var(--brand); display:flex; align-items:center; justify-content:center; font-size:20px; }
-  .sidebar-brand .sname { font-family:'Syne',sans-serif; font-size:20px; color:var(--ink); }
-  .sidebar-link { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:var(--r-sm); cursor:pointer; font-size:14px; font-weight:600; color:var(--ink2); transition:all .15s; }
-  .sidebar-link:hover { background:var(--bg); }
-  .sidebar-link.active { background:var(--brand-bg); color:var(--brand); }
-  .sidebar-link .icon { font-size:18px; }
-  .desktop-push { margin-left:240px; flex:1; overflow-x:hidden; }
+  .sidebar{width:240px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:32px 20px;position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;gap:6px;z-index:100}
+  .sb-brand{display:flex;align-items:center;gap:10px;margin-bottom:32px;padding:0 8px}
+  .sb-logo{width:38px;height:38px;border-radius:12px;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:20px}
+  .sb-name{font-family:'Syne',sans-serif;font-size:20px;color:var(--ink)}
+  .sl{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--rsm);cursor:pointer;font-size:14px;font-weight:600;color:var(--ink2);transition:all .15s}
+  .sl:hover{background:var(--bg)}
+  .sl.active{background:var(--brand-bg);color:var(--brand)}
+  .sl .ic{font-size:18px}
 }
 
-#screen-home { background:var(--bg); overflow-y:auto; padding-bottom:80px; }
-@media(min-width:768px){ #screen-home{padding-bottom:40px;} }
+/* HOME */
+#screen-home{background:var(--bg);overflow-y:auto;padding-bottom:80px}
+@media(min-width:768px){#screen-home{padding-bottom:40px;margin-left:240px}}
+.hero{background:var(--ink);padding:56px 20px 28px;position:relative;overflow:hidden}
+@media(min-width:768px){.hero{padding:48px 40px 36px;border-radius:0 0 var(--rxl) var(--rxl)}}
+.hb1{position:absolute;top:-40px;right:-40px;width:220px;height:220px;border-radius:50%;background:var(--brand);opacity:.18}
+.hb2{position:absolute;bottom:-60px;left:20%;width:160px;height:160px;border-radius:50%;background:var(--yellow);opacity:.12}
+.htop{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.hbrand{display:flex;align-items:center;gap:10px}
+.hlogo{width:36px;height:36px;border-radius:10px;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:18px}
+.hname{font-family:'Syne',sans-serif;font-size:20px;color:#fff}
+.hav{width:38px;height:38px;border-radius:50%;background:var(--brand-bg);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--brand);cursor:pointer}
+.htitle{font-family:'Syne',sans-serif;font-size:clamp(28px,7vw,44px);line-height:1.1;letter-spacing:-1.5px;color:#fff;margin-bottom:8px}
+.htitle span{color:var(--yellow)}
+.hsub{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:20px;line-height:1.6}
+.search{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.15);border-radius:var(--rmd);padding:13px 16px;transition:border-color .2s}
+.search:focus-within{border-color:var(--brand)}
+.search input{flex:1;border:none;outline:none;background:transparent;font-size:15px;font-family:inherit;color:#fff}
+.search input::placeholder{color:rgba(255,255,255,.4)}
+.hbody{padding:24px 20px 0}
+@media(min-width:768px){.hbody{padding:32px 40px 0}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+.sc{background:var(--surface);border-radius:var(--rmd);border:1px solid var(--border);padding:14px 12px;text-align:center}
+.snum{font-family:'Syne',sans-serif;font-size:22px;color:var(--brand);margin-bottom:2px}
+.slbl{font-size:11px;color:var(--ink3);font-weight:500}
+.sechdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
+.sechdr h2{font-family:'Syne',sans-serif;font-size:20px;letter-spacing:-.5px}
+.sechdr a{font-size:13px;color:var(--brand);font-weight:600;text-decoration:none}
+.cats{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;margin-bottom:28px}
+.cats::-webkit-scrollbar{display:none}
+.cat{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;flex-shrink:0}
+.catico{width:60px;height:60px;border-radius:20px;background:var(--surface);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:26px;transition:all .15s}
+.cat.active .catico{background:var(--brand-bg);border-color:var(--brand)}
+.cat span{font-size:11px;font-weight:600;color:var(--ink2)}
+.mapcard{border-radius:var(--rlg);overflow:hidden;border:1px solid var(--border);cursor:pointer;margin-bottom:28px;box-shadow:0 4px 20px rgba(255,92,0,.08);transition:transform .15s,box-shadow .15s}
+.mapcard:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,92,0,.14)}
+.mapprev{height:170px;background:var(--border);position:relative}
+#mini-map{width:100%;height:100%}
+.mapgrad{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(20,17,15,.6) 100%);display:flex;align-items:flex-end;padding:14px 16px}
+.mapgrad span{color:#fff;font-size:13px;font-weight:600}
+.mapfooter{background:var(--surface);padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+.mapfooter strong{display:block;font-size:15px;font-weight:700}
+.mapfooter small{font-size:12px;color:var(--ink3)}
+.btnmap{background:var(--brand);color:#fff;border:none;border-radius:var(--rsm);padding:10px 18px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer}
+.restos{display:flex;flex-direction:column;gap:16px}
+@media(min-width:768px){.restos{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}}
+.resto{background:var(--surface);border-radius:var(--rlg);border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.resto:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.ri{height:130px;display:flex;align-items:center;justify-content:center;font-size:52px;position:relative}
+.ri.bur{background:linear-gradient(135deg,#FFF3ED,#FFD6BC)}
+.ri.ram{background:linear-gradient(135deg,#FFF8E6,#FFE8A0)}
+.ri.piz{background:linear-gradient(135deg,#F0ECFA,#D4C8F0)}
+.ri.sus{background:linear-gradient(135deg,#E6F9F3,#A8EDD5)}
+.rbadge{position:absolute;top:10px;left:10px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+.btop{background:var(--green);color:#fff}.bnew{background:var(--brand);color:#fff}.bpop{background:var(--yellow);color:#7A5200}
+.rheart{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer}
+.rbody{padding:14px 16px 16px}
+.rtop{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.rname{font-size:17px;font-weight:700}
+.rpill{display:flex;align-items:center;gap:4px;background:var(--brand-bg);padding:4px 10px;border-radius:20px}
+.rpill .rs{color:var(--brand);font-size:12px}.rpill .rn{font-size:13px;font-weight:700;color:var(--brand)}
+.rmeta{display:flex;gap:14px;margin-bottom:10px}
+.rmeta span{font-size:12px;color:var(--ink3);font-weight:500}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;padding:4px 10px;border-radius:20px;background:var(--bg);color:var(--ink2);font-weight:600;border:1px solid var(--border)}
+.rsnip{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-start}
+.av{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.av-a{background:var(--brand-bg);color:var(--brand)}.av-b{background:var(--purple-bg);color:var(--purple)}
+.av-c{background:var(--green-bg);color:var(--green)}.av-d{background:#FFF8E6;color:#8B6200}
+.ss{font-size:10px;color:var(--brand);margin-bottom:2px}
+.st{font-size:12px;color:var(--ink2);line-height:1.5}
 
-.home-hero { background:var(--ink); padding:56px 20px 28px; position:relative; overflow:hidden; }
-@media(min-width:768px){ .home-hero{padding:48px 40px 36px; border-radius:0 0 var(--r-xl) var(--r-xl);} }
-.blob { position:absolute; border-radius:50%; }
-.blob1 { top:-40px; right:-40px; width:220px; height:220px; background:var(--brand); opacity:.18; }
-.blob2 { bottom:-60px; left:20%; width:160px; height:160px; background:var(--yellow); opacity:.12; }
+/* MAP */
+#screen-map{background:var(--bg);height:100vh;overflow:hidden}
+@media(min-width:768px){#screen-map{margin-left:240px}}
+.maptop{padding:52px 16px 14px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
+@media(min-width:768px){.maptop{padding:24px 32px 14px}}
+.btnback{width:38px;height:38px;border-radius:var(--rsm);border:1.5px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;flex-shrink:0}
+.maptop h2{font-family:'Syne',sans-serif;font-size:18px;letter-spacing:-.4px;flex:1}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--ink3);flex-shrink:0;transition:background .3s}
+.dot.on{background:var(--green);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
 
-.hero-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; }
-.hero-brand { display:flex; align-items:center; gap:10px; }
-.hero-logo { width:36px; height:36px; border-radius:10px; background:var(--brand); display:flex; align-items:center; justify-content:center; font-size:18px; }
-.hero-name { font-family:'Syne',sans-serif; font-size:20px; color:#fff; }
-.hero-av { width:38px; height:38px; border-radius:50%; background:var(--brand-bg); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:var(--brand); cursor:pointer; }
+/* CRITICAL: mapa contenedor con altura explícita */
+#map-wrap{flex:1;position:relative;display:flex;flex-direction:column}
+#map-perm{position:absolute;inset:0;z-index:500;background:rgba(248,245,241,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;text-align:center}
+.pico{font-size:60px}
+#map-perm h3{font-family:'Syne',sans-serif;font-size:24px;letter-spacing:-.5px}
+#map-perm p{font-size:14px;color:var(--ink3);line-height:1.7;max-width:280px}
+.btnprim{background:var(--brand);color:#fff;border:none;border-radius:var(--rmd);padding:15px 40px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:6px}
+#lmap{flex:1;min-height:200px}
+.mapbar{background:var(--surface);border-top:1px solid var(--border);padding:14px 20px;display:flex;gap:12px;flex-shrink:0}
+.ipill{flex:1;background:var(--bg);border-radius:var(--rsm);padding:10px;text-align:center}
+.ipill .lbl{font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.7px;font-weight:600;margin-bottom:2px}
+.ipill .val{font-size:18px;font-weight:700;color:var(--ink)}
+.ipill .unit{font-size:10px;color:var(--ink3)}
 
-.hero-title { font-family:'Syne',sans-serif; font-size:clamp(28px,7vw,44px); line-height:1.1; letter-spacing:-1.5px; color:#fff; margin-bottom:8px; }
-.hero-title span { color:var(--yellow); }
-.hero-sub { font-size:14px; color:rgba(255,255,255,.5); margin-bottom:20px; line-height:1.6; }
-
-.search-wrap { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.1); border:1.5px solid rgba(255,255,255,.15); border-radius:var(--r-md); padding:13px 16px; transition:border-color .2s; }
-.search-wrap:focus-within { border-color:var(--brand); background:rgba(255,255,255,.15); }
-.search-icon { font-size:18px; opacity:.6; }
-.search-wrap input { flex:1; border:none; outline:none; background:transparent; font-size:15px; font-family:inherit; color:#fff; }
-.search-wrap input::placeholder { color:rgba(255,255,255,.4); }
-
-.home-body { padding:24px 20px 0; }
-@media(min-width:768px){ .home-body{padding:32px 40px 0;} }
-
-.stats-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:28px; }
-.stat-card { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); padding:14px 12px; text-align:center; }
-.stat-num { font-family:'Syne',sans-serif; font-size:22px; color:var(--brand); margin-bottom:2px; }
-.stat-lbl { font-size:11px; color:var(--ink3); font-weight:500; }
-
-.sec-hdr { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:14px; }
-.sec-hdr h2 { font-family:'Syne',sans-serif; font-size:20px; letter-spacing:-.5px; }
-.sec-hdr a { font-size:13px; color:var(--brand); font-weight:600; text-decoration:none; }
-
-.cats { display:flex; gap:10px; overflow-x:auto; scrollbar-width:none; padding-bottom:4px; margin-bottom:28px; }
-.cats::-webkit-scrollbar { display:none; }
-.cat { display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer; flex-shrink:0; }
-.cat-ico { width:60px; height:60px; border-radius:20px; background:var(--surface); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:26px; transition:all .15s; }
-.cat.active .cat-ico { background:var(--brand-bg); border-color:var(--brand); }
-.cat span { font-size:11px; font-weight:600; color:var(--ink2); }
-
-.map-card { border-radius:var(--r-lg); overflow:hidden; border:1px solid var(--border); cursor:pointer; margin-bottom:28px; box-shadow:0 4px 20px rgba(255,92,0,.08); transition:transform .15s,box-shadow .15s; }
-.map-card:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(255,92,0,.14); }
-.map-card:active { transform:scale(.99); }
-.map-preview { height:170px; background:var(--border); position:relative; }
-#mini-map { width:100%; height:100%; }
-.map-grad { position:absolute; inset:0; background:linear-gradient(to bottom,transparent 40%,rgba(20,17,15,.6) 100%); display:flex; align-items:flex-end; padding:14px 16px; }
-.map-grad span { color:#fff; font-size:13px; font-weight:600; }
-.map-footer { background:var(--surface); padding:14px 18px; display:flex; align-items:center; justify-content:space-between; }
-.map-footer .mfl strong { display:block; font-size:15px; font-weight:700; }
-.map-footer .mfl small { font-size:12px; color:var(--ink3); }
-.btn-map { background:var(--brand); color:#fff; border:none; border-radius:var(--r-sm); padding:10px 18px; font-size:13px; font-weight:700; font-family:inherit; cursor:pointer; transition:background .15s; }
-.btn-map:hover { background:#e04e00; }
-
-.restos { display:flex; flex-direction:column; gap:16px; }
-@media(min-width:768px){ .restos{display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr));} }
-
-.resto { background:var(--surface); border-radius:var(--r-lg); border:1px solid var(--border); overflow:hidden; cursor:pointer; transition:transform .15s,box-shadow .15s; }
-.resto:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.08); }
-.resto:active { transform:scale(.99); }
-
-.ri { height:130px; display:flex; align-items:center; justify-content:center; font-size:52px; position:relative; }
-.ri.burger { background:linear-gradient(135deg,#FFF3ED 0%,#FFD6BC 100%); }
-.ri.ramen  { background:linear-gradient(135deg,#FFF8E6 0%,#FFE8A0 100%); }
-.ri.pizza  { background:linear-gradient(135deg,#F0ECFA 0%,#D4C8F0 100%); }
-.ri.sushi  { background:linear-gradient(135deg,#E6F9F3 0%,#A8EDD5 100%); }
-
-.rbadge { position:absolute; top:10px; left:10px; font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; }
-.b-top  { background:var(--green); color:#fff; }
-.b-new  { background:var(--brand); color:#fff; }
-.b-pop  { background:var(--yellow); color:#7A5200; }
-.rheart { position:absolute; top:10px; right:10px; width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,.85); display:flex; align-items:center; justify-content:center; font-size:15px; cursor:pointer; transition:transform .15s; }
-.rheart:active { transform:scale(1.2); }
-
-.rbody { padding:14px 16px 16px; }
-.rtop { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:8px; }
-.rname { font-size:17px; font-weight:700; }
-.rpill { display:flex; align-items:center; gap:4px; background:var(--brand-bg); padding:4px 10px; border-radius:20px; }
-.rpill .s { color:var(--brand); font-size:12px; }
-.rpill .n { font-size:13px; font-weight:700; color:var(--brand); }
-.rmeta { display:flex; gap:14px; margin-bottom:10px; }
-.rmeta span { font-size:12px; color:var(--ink3); font-weight:500; }
-.tags { display:flex; gap:6px; flex-wrap:wrap; }
-.tag { font-size:11px; padding:4px 10px; border-radius:20px; background:var(--bg); color:var(--ink2); font-weight:600; border:1px solid var(--border); }
-
-.rsnip { margin-top:12px; padding-top:12px; border-top:1px solid var(--border); display:flex; gap:10px; align-items:flex-start; }
-.av { width:30px; height:30px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
-.av-a { background:var(--brand-bg); color:var(--brand); }
-.av-b { background:var(--purple-bg); color:var(--purple); }
-.av-c { background:var(--green-bg); color:var(--green); }
-.av-d { background:#FFF8E6; color:#8B6200; }
-.ss { font-size:10px; color:var(--brand); margin-bottom:2px; }
-.st { font-size:12px; color:var(--ink2); line-height:1.5; }
-
-#screen-map { background:var(--bg); height:100vh; overflow:hidden; }
-.map-topbar { padding:52px 16px 14px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; flex-shrink:0; }
-@media(min-width:768px){ .map-topbar{padding:24px 32px 14px;} }
-.btn-back { width:38px; height:38px; border-radius:var(--r-sm); border:1.5px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; flex-shrink:0; }
-.map-topbar h2 { font-family:'Syne',sans-serif; font-size:18px; letter-spacing:-.4px; flex:1; }
-.dot { width:9px; height:9px; border-radius:50%; background:var(--ink3); flex-shrink:0; transition:background .3s; }
-.dot.on { background:var(--green); animation:pulse2 2s infinite; }
-@keyframes pulse2 { 0%,100%{opacity:1}50%{opacity:.35} }
-#full-map { flex:1; position:relative; min-height:300px; }
-#leaflet-map { position:absolute; top:0; left:0; right:0; bottom:0; }
-.map-perm { position:absolute; inset:0; z-index:400; background:rgba(248,245,241,.97); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:32px; text-align:center; }
-.perm-ico { font-size:60px; }
-.map-perm h3 { font-family:'Syne',sans-serif; font-size:24px; letter-spacing:-.5px; }
-.map-perm p { font-size:14px; color:var(--ink3); line-height:1.7; max-width:280px; }
-.btn-primary { background:var(--brand); color:#fff; border:none; border-radius:var(--r-md); padding:15px 40px; font-size:16px; font-weight:700; font-family:inherit; cursor:pointer; transition:background .15s; margin-top:6px; }
-.btn-primary:hover { background:#e04e00; }
-.map-bar { background:var(--surface); border-top:1px solid var(--border); padding:14px 20px; display:flex; gap:12px; flex-shrink:0; }
-@media(min-width:768px){ .map-bar{padding:14px 32px;} }
-.ipill { flex:1; background:var(--bg); border-radius:var(--r-sm); padding:10px; text-align:center; }
-.ipill .lbl { font-size:10px; color:var(--ink3); text-transform:uppercase; letter-spacing:.7px; font-weight:600; margin-bottom:2px; }
-.ipill .val { font-size:18px; font-weight:700; color:var(--ink); }
-.ipill .unit { font-size:10px; color:var(--ink3); margin-left:1px; }
-
-#screen-reviews { background:var(--bg); overflow-y:auto; padding-bottom:80px; }
-@media(min-width:768px){ #screen-reviews{padding-bottom:40px;} }
-.rev-hero { background:var(--ink); padding:52px 20px 28px; position:relative; overflow:hidden; }
-@media(min-width:768px){ .rev-hero{padding:40px 40px 28px;} }
-.rblob { position:absolute; top:-30px; right:-30px; width:180px; height:180px; border-radius:50%; background:var(--purple); opacity:.2; }
-.rev-back { display:flex; align-items:center; gap:8px; cursor:pointer; color:rgba(255,255,255,.6); font-size:14px; font-weight:600; margin-bottom:20px; transition:color .15s; }
-.rev-back:hover { color:#fff; }
-.rev-title { font-family:'Syne',sans-serif; font-size:clamp(24px,6vw,36px); color:#fff; letter-spacing:-1px; margin-bottom:6px; }
-.rev-sub { font-size:13px; color:rgba(255,255,255,.5); }
-
-.rbox { margin:20px 20px 0; background:var(--surface); border-radius:var(--r-lg); border:1px solid var(--border); padding:20px; display:flex; gap:24px; align-items:center; }
-@media(min-width:768px){ .rbox{margin:24px 40px 0;} }
-.bignum { font-family:'Syne',sans-serif; font-size:52px; color:var(--brand); line-height:1; }
-.bigstars { color:var(--brand); font-size:16px; margin:6px 0 4px; }
-.bigcount { font-size:12px; color:var(--ink3); font-weight:500; }
-.bars { flex:1; display:flex; flex-direction:column; gap:6px; }
-.bar-row { display:flex; align-items:center; gap:8px; font-size:11px; color:var(--ink3); font-weight:600; }
-.bar-track { flex:1; height:7px; background:var(--bg); border-radius:4px; overflow:hidden; }
-.bar-fill { height:100%; background:var(--brand); border-radius:4px; }
-
-.rev-body { padding:20px 20px 0; }
-@media(min-width:768px){ .rev-body{padding:24px 40px 0; display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:16px;} }
-.rcard { background:var(--surface); border-radius:var(--r-lg); border:1px solid var(--border); padding:16px 18px; margin-bottom:14px; transition:box-shadow .15s; }
-@media(min-width:768px){ .rcard{margin-bottom:0;} }
-.rcard:hover { box-shadow:0 4px 18px rgba(0,0,0,.07); }
-.rhdr { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-.avlg { width:42px; height:42px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:700; }
-.rmeta2 { flex:1; }
-.rn { font-size:14px; font-weight:700; }
-.rd { font-size:12px; color:var(--ink3); }
-.rstar { font-size:13px; color:var(--brand); }
-.rtxt { font-size:14px; color:var(--ink2); line-height:1.65; margin-bottom:12px; }
-.ract { display:flex; gap:8px; }
-.btn-h { font-size:12px; font-weight:600; font-family:inherit; color:var(--ink2); background:var(--bg); border:1px solid var(--border); border-radius:20px; padding:5px 12px; cursor:pointer; transition:all .15s; }
-.btn-h:hover { background:var(--brand-bg); color:var(--brand); border-color:var(--brand); }
-
-.fab { position:fixed; bottom:76px; right:20px; z-index:150; background:var(--brand); color:#fff; border:none; border-radius:50px; padding:13px 22px; font-size:14px; font-weight:700; font-family:inherit; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 6px 20px rgba(255,92,0,.4); transition:transform .15s,box-shadow .15s; }
-.fab:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(255,92,0,.45); }
-@media(min-width:768px){ .fab{bottom:32px;} }
-
-.leaflet-control-zoom a { background:var(--surface)!important; color:var(--ink)!important; border-color:var(--border)!important; }
-.leaflet-control-attribution { font-size:10px!important; }
+/* REVIEWS */
+#screen-reviews{background:var(--bg);overflow-y:auto;padding-bottom:80px}
+@media(min-width:768px){#screen-reviews{padding-bottom:40px;margin-left:240px}}
+.revhero{background:var(--ink);padding:52px 20px 28px;position:relative;overflow:hidden}
+@media(min-width:768px){.revhero{padding:40px 40px 28px}}
+.rblob{position:absolute;top:-30px;right:-30px;width:180px;height:180px;border-radius:50%;background:var(--purple);opacity:.2}
+.revback{display:flex;align-items:center;gap:8px;cursor:pointer;color:rgba(255,255,255,.6);font-size:14px;font-weight:600;margin-bottom:20px}
+.revtitle{font-family:'Syne',sans-serif;font-size:clamp(24px,6vw,36px);color:#fff;letter-spacing:-1px;margin-bottom:6px}
+.revsub{font-size:13px;color:rgba(255,255,255,.5)}
+.rbox{margin:20px;background:var(--surface);border-radius:var(--rlg);border:1px solid var(--border);padding:20px;display:flex;gap:24px;align-items:center}
+@media(min-width:768px){.rbox{margin:24px 40px}}
+.bignum{font-family:'Syne',sans-serif;font-size:52px;color:var(--brand);line-height:1}
+.bigstars{color:var(--brand);font-size:16px;margin:6px 0 4px}
+.bigcount{font-size:12px;color:var(--ink3);font-weight:500}
+.bars{flex:1;display:flex;flex-direction:column;gap:6px}
+.barrow{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--ink3);font-weight:600}
+.bartrack{flex:1;height:7px;background:var(--bg);border-radius:4px;overflow:hidden}
+.barfill{height:100%;background:var(--brand);border-radius:4px}
+.revbody{padding:0 20px}
+@media(min-width:768px){.revbody{padding:0 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}}
+.rcard{background:var(--surface);border-radius:var(--rlg);border:1px solid var(--border);padding:16px 18px;margin-bottom:14px}
+@media(min-width:768px){.rcard{margin-bottom:0}}
+.rhdr{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.avlg{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}
+.rmeta2{flex:1}.rn{font-size:14px;font-weight:700}.rd{font-size:12px;color:var(--ink3)}
+.rstar{font-size:13px;color:var(--brand)}
+.rtxt{font-size:14px;color:var(--ink2);line-height:1.65;margin-bottom:12px}
+.ract{display:flex;gap:8px}
+.btnh{font-size:12px;font-weight:600;font-family:inherit;color:var(--ink2);background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:5px 12px;cursor:pointer}
+.btnh:hover{background:var(--brand-bg);color:var(--brand);border-color:var(--brand)}
+.fab{position:fixed;bottom:76px;right:20px;z-index:150;background:var(--brand);color:#fff;border:none;border-radius:50px;padding:13px 22px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 6px 20px rgba(255,92,0,.4)}
+@media(min-width:768px){.fab{bottom:32px}}
 
 /* PROFILE */
-#screen-profile { background:var(--bg); overflow-y:auto; padding-bottom:80px; }
-@media(min-width:768px){ #screen-profile{padding-bottom:40px;} }
-.prof-hero { background:var(--ink); padding:56px 20px 36px; position:relative; overflow:hidden; text-align:center; }
-.prof-blob1 { position:absolute; top:-40px; right:-40px; width:200px; height:200px; border-radius:50%; background:var(--brand); opacity:.15; }
-.prof-blob2 { position:absolute; bottom:-50px; left:-30px; width:160px; height:160px; border-radius:50%; background:var(--yellow); opacity:.1; }
-.prof-avatar { width:88px; height:88px; border-radius:50%; background:linear-gradient(135deg,var(--brand) 0%,var(--brand2) 100%); display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:800; color:#fff; margin:0 auto 14px; border:4px solid rgba(255,255,255,.15); font-family:'Syne',sans-serif; }
-.prof-name { font-family:'Syne',sans-serif; font-size:24px; color:#fff; letter-spacing:-.5px; margin-bottom:4px; }
-.prof-handle { font-size:13px; color:rgba(255,255,255,.5); margin-bottom:16px; }
-.prof-badges { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
-.pbadge { font-size:11px; font-weight:700; padding:5px 12px; border-radius:20px; }
-.pbadge-brand { background:var(--brand-bg); color:var(--brand); }
-.pbadge-green { background:var(--green-bg); color:var(--green); }
-.pbadge-yellow { background:#FFF8E6; color:#8B6200; }
-.prof-body { padding:20px 20px 0; }
-@media(min-width:768px){ .prof-body{padding:28px 40px 0;} }
-.prof-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px; }
-.pstat { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); padding:16px 12px; text-align:center; }
-.pstat-num { font-family:'Syne',sans-serif; font-size:26px; color:var(--brand); margin-bottom:3px; }
-.pstat-lbl { font-size:11px; color:var(--ink3); font-weight:600; }
-.prof-section { margin-bottom:24px; }
-.prof-section h3 { font-family:'Syne',sans-serif; font-size:17px; letter-spacing:-.3px; margin-bottom:12px; }
-.pref-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-.pref-chip { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-sm); padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:var(--ink2); }
-.pref-chip span { display:block; font-size:22px; margin-bottom:4px; }
-.pref-chip.sel { background:var(--brand-bg); border-color:var(--brand); color:var(--brand); }
-.rev-mine { display:flex; flex-direction:column; gap:10px; }
-.rmine { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); padding:14px 16px; display:flex; gap:12px; align-items:center; cursor:pointer; transition:box-shadow .15s; }
-.rmine:hover { box-shadow:0 4px 14px rgba(0,0,0,.07); }
-.rmine-ico { width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
-.rmine-ico.burger { background:linear-gradient(135deg,#FFF3ED,#FFD6BC); }
-.rmine-ico.pizza  { background:linear-gradient(135deg,#F0ECFA,#D4C8F0); }
-.rmine-ico.sushi  { background:linear-gradient(135deg,#E6F9F3,#A8EDD5); }
-.rmine-info { flex:1; }
-.rmine-name { font-size:14px; font-weight:700; margin-bottom:2px; }
-.rmine-meta { font-size:12px; color:var(--ink3); }
-.rmine-stars { color:var(--brand); font-size:12px; }
-.menu-list { background:var(--surface); border-radius:var(--r-lg); border:1px solid var(--border); overflow:hidden; }
-.menu-item { display:flex; align-items:center; gap:12px; padding:14px 18px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s; font-size:14px; font-weight:600; }
-.menu-item:last-child { border-bottom:none; }
-.menu-item:hover { background:var(--bg); }
-.menu-item .mico { font-size:20px; width:28px; text-align:center; }
-.menu-item .marrow { margin-left:auto; color:var(--ink3); }
-.menu-item.danger { color:#CC2200; }
+#screen-profile{background:var(--bg);overflow-y:auto;padding-bottom:80px}
+@media(min-width:768px){#screen-profile{padding-bottom:40px;margin-left:240px}}
+.phero{background:var(--ink);padding:56px 20px 36px;position:relative;overflow:hidden;text-align:center}
+.pb1{position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:var(--brand);opacity:.15}
+.pb2{position:absolute;bottom:-50px;left:-30px;width:160px;height:160px;border-radius:50%;background:var(--yellow);opacity:.1}
+.pav{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--brand2));display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;color:#fff;margin:0 auto 14px;border:4px solid rgba(255,255,255,.15);font-family:'Syne',sans-serif}
+.pname{font-family:'Syne',sans-serif;font-size:24px;color:#fff;letter-spacing:-.5px;margin-bottom:4px}
+.phandle{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:16px}
+.pbadges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.pbadge{font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px}
+.pb-brand{background:var(--brand-bg);color:var(--brand)}.pb-green{background:var(--green-bg);color:var(--green)}.pb-yellow{background:#FFF8E6;color:#8B6200}
+.pbody{padding:20px}
+@media(min-width:768px){.pbody{padding:28px 40px}}
+.pstats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.psc{background:var(--surface);border-radius:var(--rmd);border:1px solid var(--border);padding:16px 12px;text-align:center}
+.psnum{font-family:'Syne',sans-serif;font-size:26px;color:var(--brand);margin-bottom:3px}
+.pslbl{font-size:11px;color:var(--ink3);font-weight:600}
+.psec{margin-bottom:24px}
+.psec h3{font-family:'Syne',sans-serif;font-size:17px;letter-spacing:-.3px;margin-bottom:12px}
+.prefgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.prefchip{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rsm);padding:10px 8px;text-align:center;font-size:11px;font-weight:700;color:var(--ink2)}
+.prefchip span{display:block;font-size:22px;margin-bottom:4px}
+.prefchip.sel{background:var(--brand-bg);border-color:var(--brand);color:var(--brand)}
+.revmine{display:flex;flex-direction:column;gap:10px}
+.rmine{background:var(--surface);border-radius:var(--rmd);border:1px solid var(--border);padding:14px 16px;display:flex;gap:12px;align-items:center;cursor:pointer}
+.rmine:hover{box-shadow:0 4px 14px rgba(0,0,0,.07)}
+.rmico{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.rmico.bur{background:linear-gradient(135deg,#FFF3ED,#FFD6BC)}
+.rmico.piz{background:linear-gradient(135deg,#F0ECFA,#D4C8F0)}
+.rmico.sus{background:linear-gradient(135deg,#E6F9F3,#A8EDD5)}
+.rminfo{flex:1}.rminame{font-size:14px;font-weight:700;margin-bottom:2px}.rmimeta{font-size:12px;color:var(--ink3)}
+.rmistars{color:var(--brand);font-size:12px}
+.menulist{background:var(--surface);border-radius:var(--rlg);border:1px solid var(--border);overflow:hidden}
+.mitem{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border);cursor:pointer;font-size:14px;font-weight:600;transition:background .15s}
+.mitem:last-child{border-bottom:none}.mitem:hover{background:var(--bg)}
+.mitem .mic{font-size:20px;width:28px;text-align:center}
+.mitem .mar{margin-left:auto;color:var(--ink3)}
+.mitem.danger{color:#CC2200}
+
+.leaflet-control-zoom a{background:var(--surface)!important;color:var(--ink)!important;border-color:var(--border)!important}
 </style>
 </head>
 <body>
 
-<aside class="sidebar" style="display:none" id="desktop-sidebar">
-  <div class="sidebar-brand">
-    <div class="logo">🍽️</div>
-    <span class="sname">EasyFood</span>
-  </div>
-  <div class="sidebar-link active" onclick="showScreen('home')"><span class="icon">🏠</span> Inicio</div>
-  <div class="sidebar-link" onclick="openMap()"><span class="icon">🗺️</span> Mapa</div>
-  <div class="sidebar-link" onclick="showScreen('reviews')"><span class="icon">⭐</span> Reseñas</div>
-  <div class="sidebar-link" style="margin-top:auto" onclick="showScreen('profile')"><span class="icon">👤</span> Perfil</div>
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand"><div class="sb-logo">🍽️</div><span class="sb-name">EasyFood</span></div>
+  <div class="sl active" onclick="go('home')"><span class="ic">🏠</span> Inicio</div>
+  <div class="sl" onclick="go('map')"><span class="ic">🗺️</span> Mapa</div>
+  <div class="sl" onclick="go('reviews')"><span class="ic">⭐</span> Reseñas</div>
+  <div class="sl" style="margin-top:auto" onclick="go('profile')"><span class="ic">👤</span> Perfil</div>
 </aside>
 
 <!-- HOME -->
 <div id="screen-home" class="screen active">
-  <div class="home-hero">
-    <div class="blob blob1"></div>
-    <div class="blob blob2"></div>
-    <div class="hero-top">
-      <div class="hero-brand">
-        <div class="hero-logo">🍽️</div>
-        <span class="hero-name">EasyFood</span>
-      </div>
-      <div class="hero-av">IS</div>
+  <div class="hero">
+    <div class="hb1"></div><div class="hb2"></div>
+    <div class="htop">
+      <div class="hbrand"><div class="hlogo">🍽️</div><span class="hname">EasyFood</span></div>
+      <div class="hav" onclick="go('profile')">IS</div>
     </div>
-    <h1 class="hero-title">Descubre dónde<br><span>comer hoy</span></h1>
-    <p class="hero-sub">Reseñas reales de personas cerca tuyo.</p>
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input type="text" placeholder="Busca un restaurante o plato...">
-    </div>
+    <h1 class="htitle">Descubre dónde<br><span>comer hoy</span></h1>
+    <p class="hsub">Reseñas reales de personas cerca tuyo.</p>
+    <div class="search"><span>🔍</span><input type="text" placeholder="Busca un restaurante o plato..."></div>
   </div>
-
-  <div class="home-body">
-    <div class="stats-strip">
-      <div class="stat-card"><div class="stat-num">1.2k</div><div class="stat-lbl">Restaurantes</div></div>
-      <div class="stat-card"><div class="stat-num">48k</div><div class="stat-lbl">Reseñas</div></div>
-      <div class="stat-card"><div class="stat-num">4.7★</div><div class="stat-lbl">Promedio</div></div>
+  <div class="hbody">
+    <div class="stats">
+      <div class="sc"><div class="snum">1.2k</div><div class="slbl">Restaurantes</div></div>
+      <div class="sc"><div class="snum">48k</div><div class="slbl">Reseñas</div></div>
+      <div class="sc"><div class="snum">4.7★</div><div class="slbl">Promedio</div></div>
     </div>
-
-    <div class="sec-hdr"><h2>¿Qué se te antoja?</h2></div>
+    <div class="sechdr"><h2>¿Qué se te antoja?</h2></div>
     <div class="cats">
-      <div class="cat active" onclick="filterCat(this)"><div class="cat-ico">🍔</div><span>Burger</span></div>
-      <div class="cat" onclick="filterCat(this)"><div class="cat-ico">🍕</div><span>Pizza</span></div>
-      <div class="cat" onclick="filterCat(this)"><div class="cat-ico">🌮</div><span>Tacos</span></div>
-      <div class="cat" onclick="filterCat(this)"><div class="cat-ico">🍜</div><span>Ramen</span></div>
-      <div class="cat" onclick="filterCat(this)"><div class="cat-ico">🥗</div><span>Sano</span></div>
-      <div class="cat" onclick="filterCat(this)"><div class="cat-ico">🍣</div><span>Sushi</span></div>
-      <div class="cat" onclick="filterCat(this)"><div class="cat-ico">☕</div><span>Café</span></div>
+      <div class="cat active" onclick="fcat(this)"><div class="catico">🍔</div><span>Burger</span></div>
+      <div class="cat" onclick="fcat(this)"><div class="catico">🍕</div><span>Pizza</span></div>
+      <div class="cat" onclick="fcat(this)"><div class="catico">🌮</div><span>Tacos</span></div>
+      <div class="cat" onclick="fcat(this)"><div class="catico">🍜</div><span>Ramen</span></div>
+      <div class="cat" onclick="fcat(this)"><div class="catico">🥗</div><span>Sano</span></div>
+      <div class="cat" onclick="fcat(this)"><div class="catico">🍣</div><span>Sushi</span></div>
+      <div class="cat" onclick="fcat(this)"><div class="catico">☕</div><span>Café</span></div>
     </div>
-
-    <div class="sec-hdr"><h2>Cerca tuyo en el mapa</h2></div>
-    <div class="map-card" onclick="openMap()">
-      <div class="map-preview"><div id="mini-map"></div>
-        <div class="map-grad"><span>📍 Ver restaurantes cercanos</span></div>
-      </div>
-      <div class="map-footer">
-        <div class="mfl"><strong>Mapa en vivo</strong><small>Usa tu ubicación actual</small></div>
-        <button class="btn-map">Abrir mapa ↗</button>
-      </div>
+    <div class="sechdr"><h2>Cerca tuyo en el mapa</h2></div>
+    <div class="mapcard" onclick="go('map')">
+      <div class="mapprev"><div id="mini-map"></div><div class="mapgrad"><span>📍 Ver restaurantes cercanos</span></div></div>
+      <div class="mapfooter"><div><strong>Mapa en vivo</strong><small>Usa tu ubicación actual</small></div><button class="btnmap">Abrir mapa ↗</button></div>
     </div>
-
-    <div class="sec-hdr"><h2>Mejor valorados</h2><a href="#">Ver todos</a></div>
+    <div class="sechdr"><h2>Mejor valorados</h2><a href="#">Ver todos</a></div>
     <div class="restos">
-
-      <div class="resto" onclick="goToReviews('La Burguesa')">
-        <div class="ri burger">🍔<span class="rbadge b-top">Top zona</span><div class="rheart">🤍</div></div>
-        <div class="rbody">
-          <div class="rtop"><span class="rname">La Burguesa</span><div class="rpill"><span class="s">★</span><span class="n">4.8</span></div></div>
-          <div class="rmeta"><span>📍 320 m</span><span>🕐 15–25 min</span><span>💰 $5.000–8.000</span></div>
-          <div class="tags"><span class="tag">Hamburguesas</span><span class="tag">Sin gluten</span><span class="tag">Para llevar</span></div>
-          <div class="rsnip"><div class="av av-a">MR</div><div><div class="ss">★★★★★</div><div class="st">"La mejor burger de Santiago, sin dudas. La carne es increíble."</div></div></div>
-        </div>
+      <div class="resto" onclick="rev('La Burguesa')">
+        <div class="ri bur">🍔<span class="rbadge btop">Top zona</span><div class="rheart">🤍</div></div>
+        <div class="rbody"><div class="rtop"><span class="rname">La Burguesa</span><div class="rpill"><span class="rs">★</span><span class="rn">4.8</span></div></div>
+        <div class="rmeta"><span>📍 320 m</span><span>🕐 15–25 min</span><span>💰 $5.000–8.000</span></div>
+        <div class="tags"><span class="tag">Hamburguesas</span><span class="tag">Sin gluten</span><span class="tag">Para llevar</span></div>
+        <div class="rsnip"><div class="av av-a">MR</div><div><div class="ss">★★★★★</div><div class="st">"La mejor burger de Santiago. La carne es increíble."</div></div></div></div>
       </div>
-
-      <div class="resto" onclick="goToReviews('Noko Ramen')">
-        <div class="ri ramen">🍜<span class="rbadge b-new">Nuevo</span><div class="rheart">🤍</div></div>
-        <div class="rbody">
-          <div class="rtop"><span class="rname">Noko Ramen</span><div class="rpill"><span class="s">★</span><span class="n">4.6</span></div></div>
-          <div class="rmeta"><span>📍 580 m</span><span>🕐 20–30 min</span><span>💰 $6.000–10.000</span></div>
-          <div class="tags"><span class="tag">Japonesa</span><span class="tag">Vegetariano</span><span class="tag">Ramen</span></div>
-          <div class="rsnip"><div class="av av-d">CL</div><div><div class="ss">★★★★★</div><div class="st">"Caldo profundo, fideos perfectos. Muy auténtico para Santiago."</div></div></div>
-        </div>
+      <div class="resto" onclick="rev('Noko Ramen')">
+        <div class="ri ram">🍜<span class="rbadge bnew">Nuevo</span><div class="rheart">🤍</div></div>
+        <div class="rbody"><div class="rtop"><span class="rname">Noko Ramen</span><div class="rpill"><span class="rs">★</span><span class="rn">4.6</span></div></div>
+        <div class="rmeta"><span>📍 580 m</span><span>🕐 20–30 min</span><span>💰 $6.000–10.000</span></div>
+        <div class="tags"><span class="tag">Japonesa</span><span class="tag">Vegetariano</span><span class="tag">Ramen</span></div>
+        <div class="rsnip"><div class="av av-d">CL</div><div><div class="ss">★★★★★</div><div class="st">"Caldo profundo, fideos perfectos. Muy auténtico."</div></div></div></div>
       </div>
-
-      <div class="resto" onclick="goToReviews('Verdi Pizza')">
-        <div class="ri pizza">🍕<span class="rbadge b-pop">Popular</span><div class="rheart">🤍</div></div>
-        <div class="rbody">
-          <div class="rtop"><span class="rname">Verdi Pizza</span><div class="rpill"><span class="s">★</span><span class="n">4.5</span></div></div>
-          <div class="rmeta"><span>📍 1.2 km</span><span>🕐 25–35 min</span><span>💰 $7.000–12.000</span></div>
-          <div class="tags"><span class="tag">Italiana</span><span class="tag">Vino</span><span class="tag">Delivery</span></div>
-          <div class="rsnip"><div class="av av-b">AP</div><div><div class="ss">★★★★☆</div><div class="st">"Masa finita y crujiente como debe ser. El servicio excelente."</div></div></div>
-        </div>
+      <div class="resto" onclick="rev('Verdi Pizza')">
+        <div class="ri piz">🍕<span class="rbadge bpop">Popular</span><div class="rheart">🤍</div></div>
+        <div class="rbody"><div class="rtop"><span class="rname">Verdi Pizza</span><div class="rpill"><span class="rs">★</span><span class="rn">4.5</span></div></div>
+        <div class="rmeta"><span>📍 1.2 km</span><span>🕐 25–35 min</span><span>💰 $7.000–12.000</span></div>
+        <div class="tags"><span class="tag">Italiana</span><span class="tag">Vino</span><span class="tag">Delivery</span></div>
+        <div class="rsnip"><div class="av av-b">AP</div><div><div class="ss">★★★★☆</div><div class="st">"Masa finita y crujiente. El servicio es excelente."</div></div></div></div>
       </div>
-
-      <div class="resto" onclick="goToReviews('Sakura Sushi')">
-        <div class="ri sushi">🍣<div class="rheart">🤍</div></div>
-        <div class="rbody">
-          <div class="rtop"><span class="rname">Sakura Sushi</span><div class="rpill"><span class="s">★</span><span class="n">4.7</span></div></div>
-          <div class="rmeta"><span>📍 900 m</span><span>🕐 30–40 min</span><span>💰 $9.000–15.000</span></div>
-          <div class="tags"><span class="tag">Japonesa</span><span class="tag">Sushi</span><span class="tag">Fresco</span></div>
-          <div class="rsnip"><div class="av av-c">KP</div><div><div class="ss">★★★★★</div><div class="st">"El salmón más fresco que he probado. Ambiente increíble."</div></div></div>
-        </div>
+      <div class="resto" onclick="rev('Sakura Sushi')">
+        <div class="ri sus">🍣<div class="rheart">🤍</div></div>
+        <div class="rbody"><div class="rtop"><span class="rname">Sakura Sushi</span><div class="rpill"><span class="rs">★</span><span class="rn">4.7</span></div></div>
+        <div class="rmeta"><span>📍 900 m</span><span>🕐 30–40 min</span><span>💰 $9.000–15.000</span></div>
+        <div class="tags"><span class="tag">Japonesa</span><span class="tag">Sushi</span><span class="tag">Fresco</span></div>
+        <div class="rsnip"><div class="av av-c">KP</div><div><div class="ss">★★★★★</div><div class="st">"El salmón más fresco que he probado. Increíble."</div></div></div></div>
       </div>
-
     </div>
   </div>
 </div>
 
 <!-- MAP -->
 <div id="screen-map" class="screen">
-  <div class="map-topbar">
-    <button class="btn-back" onclick="goHome()">←</button>
+  <div class="maptop">
+    <button class="btnback" onclick="go('home')">←</button>
     <h2>Cerca de ti</h2>
     <div class="dot" id="gps-dot"></div>
   </div>
-  <div id="full-map">
-    <div class="map-perm" id="map-perm">
-      <div class="perm-ico">📍</div>
+  <div id="map-wrap">
+    <div id="map-perm">
+      <div class="pico">📍</div>
       <h3>¿Dónde estás?</h3>
-      <p>EasyFood necesita tu ubicación para mostrarte restaurantes y hacia dónde apuntas.</p>
-      <button class="btn-primary" onclick="startMap()">Permitir ubicación</button>
+      <p>EasyFood necesita tu ubicación para mostrarte restaurantes cercanos y hacia dónde apuntas.</p>
+      <button class="btnprim" onclick="startMap()">Permitir ubicación</button>
     </div>
-    <div id="leaflet-map"></div>
+    <div id="lmap"></div>
   </div>
-  <div class="map-bar">
+  <div class="mapbar">
     <div class="ipill"><div class="lbl">Precisión</div><div><span class="val" id="v-acc">—</span><span class="unit"> m</span></div></div>
     <div class="ipill"><div class="lbl">Orientación</div><div><span class="val" id="v-dir">—</span></div></div>
     <div class="ipill"><div class="lbl">Velocidad</div><div><span class="val" id="v-spd">0</span><span class="unit"> km/h</span></div></div>
@@ -387,296 +318,261 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
 
 <!-- REVIEWS -->
 <div id="screen-reviews" class="screen">
-  <div class="rev-hero">
+  <div class="revhero">
     <div class="rblob"></div>
-    <div class="rev-back" onclick="goHome()">← Volver</div>
-    <div class="rev-title" id="rev-title">La Burguesa</div>
-    <div class="rev-sub">Reseñas verificadas de usuarios reales</div>
+    <div class="revback" onclick="go('home')">← Volver</div>
+    <div class="revtitle" id="rev-title">La Burguesa</div>
+    <div class="revsub">Reseñas verificadas de usuarios reales</div>
   </div>
   <div class="rbox">
     <div><div class="bignum">4.8</div><div class="bigstars">★★★★★</div><div class="bigcount">342 reseñas</div></div>
     <div class="bars">
-      <div class="bar-row"><span>5★</span><div class="bar-track"><div class="bar-fill" style="width:78%"></div></div><span>78%</span></div>
-      <div class="bar-row"><span>4★</span><div class="bar-track"><div class="bar-fill" style="width:14%"></div></div><span>14%</span></div>
-      <div class="bar-row"><span>3★</span><div class="bar-track"><div class="bar-fill" style="width:5%"></div></div><span>5%</span></div>
-      <div class="bar-row"><span>2★</span><div class="bar-track"><div class="bar-fill" style="width:2%"></div></div><span>2%</span></div>
-      <div class="bar-row"><span>1★</span><div class="bar-track"><div class="bar-fill" style="width:1%"></div></div><span>1%</span></div>
+      <div class="barrow"><span>5★</span><div class="bartrack"><div class="barfill" style="width:78%"></div></div><span>78%</span></div>
+      <div class="barrow"><span>4★</span><div class="bartrack"><div class="barfill" style="width:14%"></div></div><span>14%</span></div>
+      <div class="barrow"><span>3★</span><div class="bartrack"><div class="barfill" style="width:5%"></div></div><span>5%</span></div>
+      <div class="barrow"><span>2★</span><div class="bartrack"><div class="barfill" style="width:2%"></div></div><span>2%</span></div>
+      <div class="barrow"><span>1★</span><div class="bartrack"><div class="barfill" style="width:1%"></div></div><span>1%</span></div>
     </div>
   </div>
-  <div class="rev-body">
-    <div class="rcard">
-      <div class="rhdr"><div class="avlg av-a">MR</div><div class="rmeta2"><div class="rn">Martina R.</div><div class="rd">hace 2 días</div></div><div class="rstar">★★★★★</div></div>
-      <p class="rtxt">La mejor hamburguesa que he comido en Santiago. La carne es jugosa, el pan artesanal y las papas perfectamente crocantes. Definitivamente vuelvo.</p>
-      <div class="ract"><button class="btn-h">👍 Útil (24)</button><button class="btn-h">Compartir</button></div>
-    </div>
-    <div class="rcard">
-      <div class="rhdr"><div class="avlg av-d">CL</div><div class="rmeta2"><div class="rn">Carlos L.</div><div class="rd">hace 5 días</div></div><div class="rstar">★★★★★</div></div>
-      <p class="rtxt">Fui un domingo a almorzar y el local estaba lleno, pero el servicio fue rápido igual. La burger doble es enorme. Precio muy justo para lo que dan.</p>
-      <div class="ract"><button class="btn-h">👍 Útil (18)</button><button class="btn-h">Compartir</button></div>
-    </div>
-    <div class="rcard">
-      <div class="rhdr"><div class="avlg av-b">AP</div><div class="rmeta2"><div class="rn">Andrea P.</div><div class="rd">hace 1 semana</div></div><div class="rstar">★★★★☆</div></div>
-      <p class="rtxt">Muy rico todo, pero esperé bastante para que me atendieran. Quizás era mala hora. El local es bonito y limpio. Volvería un día de semana.</p>
-      <div class="ract"><button class="btn-h">👍 Útil (9)</button><button class="btn-h">Compartir</button></div>
-    </div>
-    <div class="rcard">
-      <div class="rhdr"><div class="avlg av-c">JS</div><div class="rmeta2"><div class="rn">Javier S.</div><div class="rd">hace 2 semanas</div></div><div class="rstar">★★★★★</div></div>
-      <p class="rtxt">Tienen opción sin gluten real, no es marketing. Mi novia es celíaca y pudo comer tranquila. Eso ya vale oro. La comida también estaba excelente.</p>
-      <div class="ract"><button class="btn-h">👍 Útil (31)</button><button class="btn-h">Compartir</button></div>
-    </div>
+  <div class="revbody">
+    <div class="rcard"><div class="rhdr"><div class="avlg av-a">MR</div><div class="rmeta2"><div class="rn">Martina R.</div><div class="rd">hace 2 días</div></div><div class="rstar">★★★★★</div></div><p class="rtxt">La mejor hamburguesa que he comido en Santiago. La carne es jugosa, el pan artesanal y las papas perfectamente crocantes. Definitivamente vuelvo.</p><div class="ract"><button class="btnh">👍 Útil (24)</button><button class="btnh">Compartir</button></div></div>
+    <div class="rcard"><div class="rhdr"><div class="avlg av-d">CL</div><div class="rmeta2"><div class="rn">Carlos L.</div><div class="rd">hace 5 días</div></div><div class="rstar">★★★★★</div></div><p class="rtxt">Fui un domingo a almorzar y el local estaba lleno, pero el servicio fue rápido igual. La burger doble es enorme. Precio muy justo.</p><div class="ract"><button class="btnh">👍 Útil (18)</button><button class="btnh">Compartir</button></div></div>
+    <div class="rcard"><div class="rhdr"><div class="avlg av-b">AP</div><div class="rmeta2"><div class="rn">Andrea P.</div><div class="rd">hace 1 semana</div></div><div class="rstar">★★★★☆</div></div><p class="rtxt">Muy rico todo, pero esperé bastante. Quizás era mala hora. El local es bonito y limpio. Volvería un día de semana.</p><div class="ract"><button class="btnh">👍 Útil (9)</button><button class="btnh">Compartir</button></div></div>
+    <div class="rcard"><div class="rhdr"><div class="avlg av-c">JS</div><div class="rmeta2"><div class="rn">Javier S.</div><div class="rd">hace 2 semanas</div></div><div class="rstar">★★★★★</div></div><p class="rtxt">Tienen opción sin gluten real. Mi novia es celíaca y pudo comer tranquila. Eso ya vale oro. La comida también estaba excelente.</p><div class="ract"><button class="btnh">👍 Útil (31)</button><button class="btnh">Compartir</button></div></div>
   </div>
   <button class="fab">✏️ Escribir reseña</button>
 </div>
 
-
 <!-- PROFILE -->
 <div id="screen-profile" class="screen">
-  <div class="prof-hero">
-    <div class="prof-blob1"></div>
-    <div class="prof-blob2"></div>
-    <div class="prof-avatar">IS</div>
-    <div class="prof-name">Isaías Ortiz</div>
-    <div class="prof-handle">@isaiasortizc · Santiago, Chile</div>
-    <div class="prof-badges">
-      <span class="pbadge pbadge-brand">🍔 Burger lover</span>
-      <span class="pbadge pbadge-green">✅ Reseñador verificado</span>
-      <span class="pbadge pbadge-yellow">⭐ Top contribuidor</span>
+  <div class="phero">
+    <div class="pb1"></div><div class="pb2"></div>
+    <div class="pav">IS</div>
+    <div class="pname">Isaías Ortiz</div>
+    <div class="phandle">@isaiasortizc · Santiago, Chile</div>
+    <div class="pbadges">
+      <span class="pbadge pb-brand">🍔 Burger lover</span>
+      <span class="pbadge pb-green">✅ Verificado</span>
+      <span class="pbadge pb-yellow">⭐ Top contribuidor</span>
     </div>
   </div>
-  <div class="prof-body">
-    <div class="prof-stats">
-      <div class="pstat"><div class="pstat-num">47</div><div class="pstat-lbl">Reseñas</div></div>
-      <div class="pstat"><div class="pstat-num">312</div><div class="pstat-lbl">Útiles</div></div>
-      <div class="pstat"><div class="pstat-num">4.6★</div><div class="pstat-lbl">Promedio</div></div>
+  <div class="pbody">
+    <div class="pstats">
+      <div class="psc"><div class="psnum">47</div><div class="pslbl">Reseñas</div></div>
+      <div class="psc"><div class="psnum">312</div><div class="pslbl">Útiles</div></div>
+      <div class="psc"><div class="psnum">4.6★</div><div class="pslbl">Promedio</div></div>
     </div>
-
-    <div class="prof-section">
+    <div class="psec">
       <h3>Mis preferencias 🍽️</h3>
-      <div class="pref-grid">
-        <div class="pref-chip sel"><span>🍔</span>Burger</div>
-        <div class="pref-chip sel"><span>🍜</span>Ramen</div>
-        <div class="pref-chip"><span>🍕</span>Pizza</div>
-        <div class="pref-chip sel"><span>🍣</span>Sushi</div>
-        <div class="pref-chip"><span>🌮</span>Tacos</div>
-        <div class="pref-chip"><span>🥗</span>Sano</div>
+      <div class="prefgrid">
+        <div class="prefchip sel"><span>🍔</span>Burger</div>
+        <div class="prefchip sel"><span>🍜</span>Ramen</div>
+        <div class="prefchip"><span>🍕</span>Pizza</div>
+        <div class="prefchip sel"><span>🍣</span>Sushi</div>
+        <div class="prefchip"><span>🌮</span>Tacos</div>
+        <div class="prefchip"><span>🥗</span>Sano</div>
       </div>
     </div>
-
-    <div class="prof-section">
+    <div class="psec">
       <h3>Mis últimas reseñas</h3>
-      <div class="rev-mine">
-        <div class="rmine" onclick="goToReviews('La Burguesa')">
-          <div class="rmine-ico burger">🍔</div>
-          <div class="rmine-info">
-            <div class="rmine-name">La Burguesa</div>
-            <div class="rmine-meta">hace 2 días · <span class="rmine-stars">★★★★★</span></div>
-          </div>
-          <span style="color:var(--ink3);font-size:18px">›</span>
-        </div>
-        <div class="rmine" onclick="goToReviews('Verdi Pizza')">
-          <div class="rmine-ico pizza">🍕</div>
-          <div class="rmine-info">
-            <div class="rmine-name">Verdi Pizza</div>
-            <div class="rmine-meta">hace 1 semana · <span class="rmine-stars">★★★★☆</span></div>
-          </div>
-          <span style="color:var(--ink3);font-size:18px">›</span>
-        </div>
-        <div class="rmine" onclick="goToReviews('Sakura Sushi')">
-          <div class="rmine-ico sushi">🍣</div>
-          <div class="rmine-info">
-            <div class="rmine-name">Sakura Sushi</div>
-            <div class="rmine-meta">hace 2 semanas · <span class="rmine-stars">★★★★★</span></div>
-          </div>
-          <span style="color:var(--ink3);font-size:18px">›</span>
-        </div>
+      <div class="revmine">
+        <div class="rmine" onclick="rev('La Burguesa')"><div class="rmico bur">🍔</div><div class="rminfo"><div class="rminame">La Burguesa</div><div class="rmimeta">hace 2 días · <span class="rmistars">★★★★★</span></div></div><span style="color:var(--ink3);font-size:20px">›</span></div>
+        <div class="rmine" onclick="rev('Verdi Pizza')"><div class="rmico piz">🍕</div><div class="rminfo"><div class="rminame">Verdi Pizza</div><div class="rmimeta">hace 1 semana · <span class="rmistars">★★★★☆</span></div></div><span style="color:var(--ink3);font-size:20px">›</span></div>
+        <div class="rmine" onclick="rev('Sakura Sushi')"><div class="rmico sus">🍣</div><div class="rminfo"><div class="rminame">Sakura Sushi</div><div class="rmimeta">hace 2 semanas · <span class="rmistars">★★★★★</span></div></div><span style="color:var(--ink3);font-size:20px">›</span></div>
       </div>
     </div>
-
-    <div class="prof-section">
+    <div class="psec">
       <h3>Cuenta</h3>
-      <div class="menu-list">
-        <div class="menu-item"><span class="mico">🔔</span>Notificaciones<span class="marrow">›</span></div>
-        <div class="menu-item"><span class="mico">🔒</span>Privacidad<span class="marrow">›</span></div>
-        <div class="menu-item"><span class="mico">⭐</span>Favoritos<span class="marrow">›</span></div>
-        <div class="menu-item"><span class="mico">🎁</span>Referidos<span class="marrow">›</span></div>
-        <div class="menu-item"><span class="mico">❓</span>Ayuda<span class="marrow">›</span></div>
-        <div class="menu-item danger"><span class="mico">🚪</span>Cerrar sesión</div>
+      <div class="menulist">
+        <div class="mitem"><span class="mic">🔔</span>Notificaciones<span class="mar">›</span></div>
+        <div class="mitem"><span class="mic">🔒</span>Privacidad<span class="mar">›</span></div>
+        <div class="mitem"><span class="mic">⭐</span>Favoritos<span class="mar">›</span></div>
+        <div class="mitem"><span class="mic">🎁</span>Referidos<span class="mar">›</span></div>
+        <div class="mitem"><span class="mic">❓</span>Ayuda<span class="mar">›</span></div>
+        <div class="mitem danger"><span class="mic">🚪</span>Cerrar sesión</div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- BOTTOM NAV -->
-<nav class="bottom-nav" id="bnav">
-  <div class="nav-item active" onclick="showScreen('home')"><span class="nav-icon">🏠</span><span>Inicio</span></div>
-  <div class="nav-item" onclick="openMap()"><span class="nav-icon">🗺️</span><span>Mapa</span></div>
-  <div class="nav-item" onclick="showScreen('reviews')"><span class="nav-icon">⭐</span><span>Reseñas</span></div>
-  <div class="nav-item" onclick="showScreen('profile')"><span class="nav-icon">👤</span><span>Perfil</span></div>
+<nav class="bnav" id="bnav">
+  <div class="ni active" onclick="go('home')"><span class="ni-icon">🏠</span><span>Inicio</span></div>
+  <div class="ni" onclick="go('map')"><span class="ni-icon">🗺️</span><span>Mapa</span></div>
+  <div class="ni" onclick="go('reviews')"><span class="ni-icon">⭐</span><span>Reseñas</span></div>
+  <div class="ni" onclick="go('profile')"><span class="ni-icon">👤</span><span>Perfil</span></div>
 </nav>
 
 <script>
-let lmap=null,mini=null,uMk=null,aCir=null,hLn=null,cPos=null,cHdg=null;
+// ── Estado global ──
+let miniMap=null, leafMap=null, userMk=null, accCirc=null, hdgLine=null;
+let curPos=null, curHdg=null, mapInited=false;
 
-function applyDesktop(){
-  const sb=document.getElementById('desktop-sidebar');
-  if(window.innerWidth>=768){ sb.style.display='flex'; }
-  else { sb.style.display='none'; }
-}
-
-function showScreen(name){
+// ── Navegación ──
+function go(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
-  document.getElementById('bnav').style.display=name==='map'?'none':'flex';
-  document.querySelectorAll('.nav-item').forEach((el,i)=>{
-    el.classList.toggle('active',['home','map','reviews','profile'][i]===name);
+
+  // Bottom nav
+  document.getElementById('bnav').style.display = name==='map' ? 'none' : 'flex';
+  document.querySelectorAll('.ni').forEach((el,i)=>{
+    el.classList.toggle('active', ['home','map','reviews','profile'][i]===name);
   });
-  document.querySelectorAll('.sidebar-link').forEach((el,i)=>{
-    el.classList.toggle('active',['home','map','reviews','profile'][i]===name);
+  // Sidebar
+  document.querySelectorAll('.sl').forEach((el,i)=>{
+    el.classList.toggle('active', ['home','map','reviews','profile'][i]===name);
   });
-  if(name==='home'&&!mini) initMini();
+
+  if(name==='home' && !miniMap) initMini();
+
+  if(name==='map'){
+    // Esperar 2 frames para que el display:flex sea efectivo, luego inicializar
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      if(!mapInited){ mapInited=true; initLeaflet(); }
+      else { leafMap.invalidateSize(); }
+    }));
+  }
 }
 
-function openMap(){
-  showScreen('map');
-  if(!lmap){ initLeaflet(); }
-  // Múltiples invalidaciones para asegurar render correcto
-  setTimeout(()=>{ if(lmap){ lmap.invalidateSize(true); } }, 100);
-  setTimeout(()=>{ if(lmap){ lmap.invalidateSize(true); } }, 500);
+function rev(name){
+  document.getElementById('rev-title').textContent=name;
+  go('reviews');
 }
-function goHome(){ showScreen('home'); }
-function goToReviews(n){ document.getElementById('rev-title').textContent=n; showScreen('reviews'); }
-function filterCat(el){ document.querySelectorAll('.cat').forEach(c=>c.classList.remove('active')); el.classList.add('active'); }
 
+function fcat(el){
+  document.querySelectorAll('.cat').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── Mini mapa (home) ──
 function initMini(){
-  mini=L.map('mini-map',{zoomControl:false,dragging:false,scrollWheelZoom:false,touchZoom:false,doubleClickZoom:false,attributionControl:false}).setView([-33.45,-70.65],14);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:18}).addTo(mini);
+  miniMap = L.map('mini-map',{
+    zoomControl:false,dragging:false,scrollWheelZoom:false,
+    touchZoom:false,doubleClickZoom:false,attributionControl:false
+  }).setView([-33.45,-70.65],14);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    {subdomains:'abcd',maxZoom:18}).addTo(miniMap);
   [[-33.448,-70.655],[-33.452,-70.648],[-33.446,-70.660],[-33.455,-70.658]].forEach(p=>{
-    L.circleMarker(p,{radius:9,fillColor:'#FF5C00',color:'white',weight:2,fillOpacity:1}).addTo(mini);
+    L.circleMarker(p,{radius:9,fillColor:'#FF5C00',color:'white',weight:2,fillOpacity:1}).addTo(miniMap);
   });
 }
 
+// ── Mapa principal ──
 function initLeaflet(){
-  // Forzar tamaño correcto del contenedor antes de inicializar
-  const el = document.getElementById('leaflet-map');
-  el.style.position = 'absolute';
-  el.style.top = '0'; el.style.left = '0';
-  el.style.width = '100%'; el.style.height = '100%';
+  // El contenedor #lmap ya es visible porque la pantalla tiene display:flex
+  leafMap = L.map('lmap',{zoomControl:true,attributionControl:false});
+  leafMap.setView([-33.45,-70.65],14);
 
-  lmap = L.map('leaflet-map', {zoomControl:true, attributionControl:false}).setView([-33.45,-70.65], 15);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {subdomains:'abcd', maxZoom:20}).addTo(lmap);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    {subdomains:'abcd',maxZoom:20}).addTo(leafMap);
 
-  const restos = [
-    {p:[-33.448,-70.655], n:'La Burguesa', r:'4.8', i:'🍔'},
-    {p:[-33.452,-70.648], n:'Noko Ramen',  r:'4.6', i:'🍜'},
-    {p:[-33.446,-70.660], n:'Verdi Pizza', r:'4.5', i:'🍕'},
-    {p:[-33.455,-70.658], n:'Sakura Sushi',r:'4.7', i:'🍣'}
-  ];
-  restos.forEach(r => {
-    const ic = L.divIcon({
-      html: `<div style="background:white;border:2px solid #FF5C00;border-radius:20px;padding:5px 10px;font-size:12px;font-weight:700;color:#14110F;white-space:nowrap;box-shadow:0 3px 10px rgba(255,92,0,.2)">${r.i} ${r.n} <span style="color:#FF5C00">${r.r}★</span></div>`,
-      iconAnchor:[0,0], className:''
+  // Marcadores restaurantes de ejemplo
+  [{p:[-33.448,-70.655],n:'La Burguesa',r:'4.8',i:'🍔'},
+   {p:[-33.452,-70.648],n:'Noko Ramen', r:'4.6',i:'🍜'},
+   {p:[-33.446,-70.660],n:'Verdi Pizza',r:'4.5',i:'🍕'},
+   {p:[-33.455,-70.658],n:'Sakura Sushi',r:'4.7',i:'🍣'}
+  ].forEach(r=>{
+    const ic=L.divIcon({
+      html:`<div style="background:#fff;border:2px solid #FF5C00;border-radius:20px;padding:5px 10px;font-size:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 8px rgba(255,92,0,.25)">${r.i} ${r.n} <span style="color:#FF5C00">${r.r}★</span></div>`,
+      iconAnchor:[0,0],className:''
     });
-    L.marker(r.p, {icon:ic}).addTo(lmap).on('click', ()=>goToReviews(r.n));
+    L.marker(r.p,{icon:ic}).addTo(leafMap).on('click',()=>rev(r.n));
   });
 
-  // Forzar recálculo de tamaño tras render
-  setTimeout(()=>{ lmap.invalidateSize(true); }, 300);
+  // Forzar recálculo de tamaño
+  setTimeout(()=>leafMap.invalidateSize(),100);
 }
 
+// ── GPS y brújula ──
 function startMap(){
-  document.getElementById('map-perm').style.display = 'none';
+  document.getElementById('map-perm').style.display='none';
 
-  // Asegurar que el mapa esté inicializado
-  if(!lmap){ initLeaflet(); }
-  setTimeout(()=>{ lmap.invalidateSize(true); }, 200);
+  if(!leafMap){ mapInited=true; initLeaflet(); }
+  else { leafMap.invalidateSize(); }
 
   if(!navigator.geolocation){
-    alert('Tu navegador no soporta geolocalización');
+    document.getElementById('v-acc').textContent='No soportado';
     return;
   }
 
-  const watchId = navigator.geolocation.watchPosition(
-    pos => {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
-      const acc = pos.coords.accuracy;
-      const spd = pos.coords.speed;
-      const hdg = pos.coords.heading;
+  navigator.geolocation.watchPosition(onPos, onErr,
+    {enableHighAccuracy:true, maximumAge:3000, timeout:20000});
 
-      cPos = {lat, lng};
-      document.getElementById('v-acc').textContent = Math.round(acc);
-      document.getElementById('v-spd').textContent = spd ? Math.round(spd * 3.6) : '0';
-      document.getElementById('gps-dot').classList.add('on');
-
-      if(!uMk){
-        // Primera vez: centrar mapa en usuario
-        lmap.setView([lat, lng], 17);
-        // Marcador del usuario (punto naranja con borde blanco)
-        uMk = L.circleMarker([lat, lng], {
-          radius:14, fillColor:'#FF5C00', color:'white', weight:4, fillOpacity:1, zIndexOffset:1000
-        }).addTo(lmap).bindPopup('📍 Estás aquí');
-        // Círculo de precisión
-        aCir = L.circle([lat, lng], {
-          radius: acc, color:'#FF5C00', fillColor:'#FF5C00', fillOpacity:0.08, weight:1.5
-        }).addTo(lmap);
-      } else {
-        uMk.setLatLng([lat, lng]);
-        aCir.setLatLng([lat, lng]).setRadius(acc);
-      }
-
-      // Heading desde GPS (disponible cuando te mueves)
-      if(hdg !== null && !isNaN(hdg) && hdg > 0){
-        cHdg = hdg;
-        updateHdg();
-      }
-    },
-    err => {
-      console.error('GPS error:', err.code, err.message);
-      document.getElementById('v-acc').textContent = 'Error';
-      document.getElementById('gps-dot').style.background = '#CC2200';
-    },
-    { enableHighAccuracy:true, maximumAge:2000, timeout:15000 }
-  );
-
-  // Orientación del dispositivo (brújula)
-  if(typeof DeviceOrientationEvent !== 'undefined'){
-    if(typeof DeviceOrientationEvent.requestPermission === 'function'){
-      // iOS 13+
+  // Brújula
+  if(typeof DeviceOrientationEvent!=='undefined'){
+    if(typeof DeviceOrientationEvent.requestPermission==='function'){
       DeviceOrientationEvent.requestPermission()
-        .then(state => { if(state === 'granted') listenO(); })
-        .catch(()=>{});
+        .then(s=>{ if(s==='granted') addOrient(); }).catch(()=>{});
     } else {
-      // Android y otros
-      listenO();
+      addOrient();
     }
   }
 }
 
-function listenO(){
-  window.addEventListener('deviceorientationabsolute',onO,true);
-  window.addEventListener('deviceorientation',onO,true);
+function onPos(pos){
+  const lat=pos.coords.latitude, lng=pos.coords.longitude;
+  const acc=pos.coords.accuracy, spd=pos.coords.speed, hdg=pos.coords.heading;
+  curPos={lat,lng};
+
+  document.getElementById('v-acc').textContent=Math.round(acc);
+  document.getElementById('v-spd').textContent=spd?Math.round(spd*3.6):'0';
+  document.getElementById('gps-dot').classList.add('on');
+
+  if(leafMap) leafMap.invalidateSize();
+
+  if(!userMk){
+    if(leafMap) leafMap.setView([lat,lng],17);
+    userMk=L.circleMarker([lat,lng],{
+      radius:14,fillColor:'#FF5C00',color:'#fff',weight:4,fillOpacity:1,zIndexOffset:9999
+    }).addTo(leafMap).bindPopup('📍 Estás aquí').openPopup();
+    accCirc=L.circle([lat,lng],{
+      radius:acc,color:'#FF5C00',fillColor:'#FF5C00',fillOpacity:.08,weight:1
+    }).addTo(leafMap);
+  } else {
+    userMk.setLatLng([lat,lng]);
+    accCirc.setLatLng([lat,lng]).setRadius(acc);
+  }
+
+  if(hdg!=null && !isNaN(hdg) && hdg>0){ curHdg=hdg; drawHdg(); }
 }
 
-function onO(e){
+function onErr(e){
+  const m={1:'Permiso denegado',2:'Sin señal GPS',3:'Tiempo agotado'};
+  document.getElementById('v-acc').textContent=m[e.code]||'Error';
+}
+
+function addOrient(){
+  window.addEventListener('deviceorientationabsolute', onOrient, true);
+  window.addEventListener('deviceorientation', onOrient, true);
+}
+
+function onOrient(e){
   let h=null;
-  if(e.webkitCompassHeading!==undefined)h=e.webkitCompassHeading;
-  else if(e.absolute&&e.alpha!==null)h=(360-e.alpha)%360;
-  else if(e.alpha!==null)h=(360-e.alpha)%360;
-  if(h!==null){cHdg=h;updateHdg();}
+  if(e.webkitCompassHeading!=null) h=e.webkitCompassHeading;
+  else if(e.absolute && e.alpha!=null) h=(360-e.alpha)%360;
+  else if(e.alpha!=null) h=(360-e.alpha)%360;
+  if(h!=null){ curHdg=h; drawHdg(); }
 }
 
-function updateHdg(){
-  if(!cPos||cHdg===null)return;
+function drawHdg(){
+  if(!curPos||curHdg==null||!leafMap) return;
   const dirs=['N','NE','E','SE','S','SO','O','NO'];
-  document.getElementById('v-dir').textContent=dirs[Math.round(cHdg/45)%8]+' '+Math.round(cHdg)+'°';
-  const rad=(cHdg*Math.PI)/180,d=0.0004;
-  const dest=[cPos.lat+d*Math.cos(rad),cPos.lng+d*Math.sin(rad)];
-  if(hLn)lmap.removeLayer(hLn);
-  hLn=L.polyline([[cPos.lat,cPos.lng],dest],{color:'#FF5C00',weight:3,opacity:.9,dashArray:'6,4'}).addTo(lmap);
+  document.getElementById('v-dir').textContent=
+    dirs[Math.round(curHdg/45)%8]+' '+Math.round(curHdg)+'°';
+  const rad=curHdg*Math.PI/180, d=0.0005;
+  const dest=[curPos.lat+d*Math.cos(rad), curPos.lng+d*Math.sin(rad)];
+  if(hdgLine) leafMap.removeLayer(hdgLine);
+  hdgLine=L.polyline([[curPos.lat,curPos.lng],dest],
+    {color:'#FF5C00',weight:4,opacity:.9,dashArray:'8,5'}).addTo(leafMap);
+}
+
+// ── Desktop sidebar ──
+function applyDesktop(){
+  document.getElementById('sidebar').style.display=window.innerWidth>=768?'flex':'none';
 }
 
 window.addEventListener('load',()=>{ initMini(); applyDesktop(); });
-window.addEventListener('resize',applyDesktop);
+window.addEventListener('resize', applyDesktop);
 </script>
 </body>
 </html>
