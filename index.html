@@ -534,10 +534,15 @@ function showScreen(name){
     el.classList.toggle('active',['home','map','reviews','profile'][i]===name);
   });
   if(name==='home'&&!mini) initMini();
-  if(name==='map'&&!lmap) initLeaflet();
 }
 
-function openMap(){ showScreen('map'); setTimeout(()=>{ if(lmap) lmap.invalidateSize(); },100); }
+function openMap(){
+  showScreen('map');
+  if(!lmap){ initLeaflet(); }
+  // Múltiples invalidaciones para asegurar render correcto
+  setTimeout(()=>{ if(lmap){ lmap.invalidateSize(true); } }, 100);
+  setTimeout(()=>{ if(lmap){ lmap.invalidateSize(true); } }, 500);
+}
 function goHome(){ showScreen('home'); }
 function goToReviews(n){ document.getElementById('rev-title').textContent=n; showScreen('reviews'); }
 function filterCat(el){ document.querySelectorAll('.cat').forEach(c=>c.classList.remove('active')); el.classList.add('active'); }
@@ -551,33 +556,100 @@ function initMini(){
 }
 
 function initLeaflet(){
-  lmap=L.map('leaflet-map',{zoomControl:true,attributionControl:false}).setView([-33.45,-70.65],15);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:20}).addTo(lmap);
-  [{p:[-33.448,-70.655],n:'La Burguesa',r:'4.8',i:'🍔'},{p:[-33.452,-70.648],n:'Noko Ramen',r:'4.6',i:'🍜'},{p:[-33.446,-70.660],n:'Verdi Pizza',r:'4.5',i:'🍕'},{p:[-33.455,-70.658],n:'Sakura Sushi',r:'4.7',i:'🍣'}].forEach(r=>{
-    const ic=L.divIcon({html:`<div style="background:white;border:2px solid #FF5C00;border-radius:20px;padding:5px 10px;font-size:12px;font-weight:700;color:#14110F;white-space:nowrap;box-shadow:0 3px 10px rgba(255,92,0,.2)">${r.i} ${r.n} <span style="color:#FF5C00">${r.r}★</span></div>`,iconAnchor:[0,0],className:''});
-    L.marker(r.p,{icon:ic}).addTo(lmap).on('click',()=>goToReviews(r.n));
+  // Forzar tamaño correcto del contenedor antes de inicializar
+  const el = document.getElementById('leaflet-map');
+  el.style.position = 'absolute';
+  el.style.top = '0'; el.style.left = '0';
+  el.style.width = '100%'; el.style.height = '100%';
+
+  lmap = L.map('leaflet-map', {zoomControl:true, attributionControl:false}).setView([-33.45,-70.65], 15);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {subdomains:'abcd', maxZoom:20}).addTo(lmap);
+
+  const restos = [
+    {p:[-33.448,-70.655], n:'La Burguesa', r:'4.8', i:'🍔'},
+    {p:[-33.452,-70.648], n:'Noko Ramen',  r:'4.6', i:'🍜'},
+    {p:[-33.446,-70.660], n:'Verdi Pizza', r:'4.5', i:'🍕'},
+    {p:[-33.455,-70.658], n:'Sakura Sushi',r:'4.7', i:'🍣'}
+  ];
+  restos.forEach(r => {
+    const ic = L.divIcon({
+      html: `<div style="background:white;border:2px solid #FF5C00;border-radius:20px;padding:5px 10px;font-size:12px;font-weight:700;color:#14110F;white-space:nowrap;box-shadow:0 3px 10px rgba(255,92,0,.2)">${r.i} ${r.n} <span style="color:#FF5C00">${r.r}★</span></div>`,
+      iconAnchor:[0,0], className:''
+    });
+    L.marker(r.p, {icon:ic}).addTo(lmap).on('click', ()=>goToReviews(r.n));
   });
+
+  // Forzar recálculo de tamaño tras render
+  setTimeout(()=>{ lmap.invalidateSize(true); }, 300);
 }
 
 function startMap(){
-  document.getElementById('map-perm').style.display='none';
-  if(!navigator.geolocation) return;
-  navigator.geolocation.watchPosition(pos=>{
-    const{latitude:lat,longitude:lng,accuracy:acc,speed:spd,heading:hdg}=pos.coords;
-    cPos={lat,lng};
-    document.getElementById('v-acc').textContent=Math.round(acc);
-    document.getElementById('v-spd').textContent=spd?Math.round(spd*3.6):'0';
-    document.getElementById('gps-dot').classList.add('on');
-    if(!uMk){
-      lmap.setView([lat,lng],17);
-      uMk=L.circleMarker([lat,lng],{radius:11,fillColor:'#FF5C00',color:'white',weight:3,fillOpacity:1}).addTo(lmap).bindPopup('Estás aquí');
-      aCir=L.circle([lat,lng],{radius:acc,color:'#FF5C00',fillColor:'#FF5C00',fillOpacity:.07,weight:1}).addTo(lmap);
-    }else{ uMk.setLatLng([lat,lng]); aCir.setLatLng([lat,lng]).setRadius(acc); }
-    if(hdg!==null&&!isNaN(hdg)){cHdg=hdg;updateHdg();}
-  },()=>{},{enableHighAccuracy:true,maximumAge:1000,timeout:10000});
-  if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
-    DeviceOrientationEvent.requestPermission().then(s=>{if(s==='granted')listenO();}).catch(()=>{});
-  }else if(window.DeviceOrientationEvent){listenO();}
+  document.getElementById('map-perm').style.display = 'none';
+
+  // Asegurar que el mapa esté inicializado
+  if(!lmap){ initLeaflet(); }
+  setTimeout(()=>{ lmap.invalidateSize(true); }, 200);
+
+  if(!navigator.geolocation){
+    alert('Tu navegador no soporta geolocalización');
+    return;
+  }
+
+  const watchId = navigator.geolocation.watchPosition(
+    pos => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      const acc = pos.coords.accuracy;
+      const spd = pos.coords.speed;
+      const hdg = pos.coords.heading;
+
+      cPos = {lat, lng};
+      document.getElementById('v-acc').textContent = Math.round(acc);
+      document.getElementById('v-spd').textContent = spd ? Math.round(spd * 3.6) : '0';
+      document.getElementById('gps-dot').classList.add('on');
+
+      if(!uMk){
+        // Primera vez: centrar mapa en usuario
+        lmap.setView([lat, lng], 17);
+        // Marcador del usuario (punto naranja con borde blanco)
+        uMk = L.circleMarker([lat, lng], {
+          radius:14, fillColor:'#FF5C00', color:'white', weight:4, fillOpacity:1, zIndexOffset:1000
+        }).addTo(lmap).bindPopup('📍 Estás aquí');
+        // Círculo de precisión
+        aCir = L.circle([lat, lng], {
+          radius: acc, color:'#FF5C00', fillColor:'#FF5C00', fillOpacity:0.08, weight:1.5
+        }).addTo(lmap);
+      } else {
+        uMk.setLatLng([lat, lng]);
+        aCir.setLatLng([lat, lng]).setRadius(acc);
+      }
+
+      // Heading desde GPS (disponible cuando te mueves)
+      if(hdg !== null && !isNaN(hdg) && hdg > 0){
+        cHdg = hdg;
+        updateHdg();
+      }
+    },
+    err => {
+      console.error('GPS error:', err.code, err.message);
+      document.getElementById('v-acc').textContent = 'Error';
+      document.getElementById('gps-dot').style.background = '#CC2200';
+    },
+    { enableHighAccuracy:true, maximumAge:2000, timeout:15000 }
+  );
+
+  // Orientación del dispositivo (brújula)
+  if(typeof DeviceOrientationEvent !== 'undefined'){
+    if(typeof DeviceOrientationEvent.requestPermission === 'function'){
+      // iOS 13+
+      DeviceOrientationEvent.requestPermission()
+        .then(state => { if(state === 'granted') listenO(); })
+        .catch(()=>{});
+    } else {
+      // Android y otros
+      listenO();
+    }
+  }
 }
 
 function listenO(){
