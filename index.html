@@ -141,7 +141,7 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
 .ss { font-size:10px; color:var(--brand); margin-bottom:2px; }
 .st { font-size:12px; color:var(--ink2); line-height:1.5; }
 
-#screen-map { background:var(--bg); }
+#screen-map { background:var(--bg); height:100vh; overflow:hidden; }
 .map-topbar { padding:52px 16px 14px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; flex-shrink:0; }
 @media(min-width:768px){ .map-topbar{padding:24px 32px 14px;} }
 .btn-back { width:38px; height:38px; border-radius:var(--r-sm); border:1.5px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; flex-shrink:0; }
@@ -149,8 +149,8 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
 .dot { width:9px; height:9px; border-radius:50%; background:var(--ink3); flex-shrink:0; transition:background .3s; }
 .dot.on { background:var(--green); animation:pulse2 2s infinite; }
 @keyframes pulse2 { 0%,100%{opacity:1}50%{opacity:.35} }
-#full-map { flex:1; position:relative; min-height:0; }
-#leaflet-map { width:100%; height:100%; }
+#full-map { flex:1; position:relative; min-height:300px; }
+#leaflet-map { position:absolute; top:0; left:0; right:0; bottom:0; }
 .map-perm { position:absolute; inset:0; z-index:400; background:rgba(248,245,241,.97); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:32px; text-align:center; }
 .perm-ico { font-size:60px; }
 .map-perm h3 { font-family:'Syne',sans-serif; font-size:24px; letter-spacing:-.5px; }
@@ -206,6 +206,51 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
 
 .leaflet-control-zoom a { background:var(--surface)!important; color:var(--ink)!important; border-color:var(--border)!important; }
 .leaflet-control-attribution { font-size:10px!important; }
+
+/* PROFILE */
+#screen-profile { background:var(--bg); overflow-y:auto; padding-bottom:80px; }
+@media(min-width:768px){ #screen-profile{padding-bottom:40px;} }
+.prof-hero { background:var(--ink); padding:56px 20px 36px; position:relative; overflow:hidden; text-align:center; }
+.prof-blob1 { position:absolute; top:-40px; right:-40px; width:200px; height:200px; border-radius:50%; background:var(--brand); opacity:.15; }
+.prof-blob2 { position:absolute; bottom:-50px; left:-30px; width:160px; height:160px; border-radius:50%; background:var(--yellow); opacity:.1; }
+.prof-avatar { width:88px; height:88px; border-radius:50%; background:linear-gradient(135deg,var(--brand) 0%,var(--brand2) 100%); display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:800; color:#fff; margin:0 auto 14px; border:4px solid rgba(255,255,255,.15); font-family:'Syne',sans-serif; }
+.prof-name { font-family:'Syne',sans-serif; font-size:24px; color:#fff; letter-spacing:-.5px; margin-bottom:4px; }
+.prof-handle { font-size:13px; color:rgba(255,255,255,.5); margin-bottom:16px; }
+.prof-badges { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+.pbadge { font-size:11px; font-weight:700; padding:5px 12px; border-radius:20px; }
+.pbadge-brand { background:var(--brand-bg); color:var(--brand); }
+.pbadge-green { background:var(--green-bg); color:var(--green); }
+.pbadge-yellow { background:#FFF8E6; color:#8B6200; }
+.prof-body { padding:20px 20px 0; }
+@media(min-width:768px){ .prof-body{padding:28px 40px 0;} }
+.prof-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px; }
+.pstat { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); padding:16px 12px; text-align:center; }
+.pstat-num { font-family:'Syne',sans-serif; font-size:26px; color:var(--brand); margin-bottom:3px; }
+.pstat-lbl { font-size:11px; color:var(--ink3); font-weight:600; }
+.prof-section { margin-bottom:24px; }
+.prof-section h3 { font-family:'Syne',sans-serif; font-size:17px; letter-spacing:-.3px; margin-bottom:12px; }
+.pref-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.pref-chip { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-sm); padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:var(--ink2); }
+.pref-chip span { display:block; font-size:22px; margin-bottom:4px; }
+.pref-chip.sel { background:var(--brand-bg); border-color:var(--brand); color:var(--brand); }
+.rev-mine { display:flex; flex-direction:column; gap:10px; }
+.rmine { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); padding:14px 16px; display:flex; gap:12px; align-items:center; cursor:pointer; transition:box-shadow .15s; }
+.rmine:hover { box-shadow:0 4px 14px rgba(0,0,0,.07); }
+.rmine-ico { width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.rmine-ico.burger { background:linear-gradient(135deg,#FFF3ED,#FFD6BC); }
+.rmine-ico.pizza  { background:linear-gradient(135deg,#F0ECFA,#D4C8F0); }
+.rmine-ico.sushi  { background:linear-gradient(135deg,#E6F9F3,#A8EDD5); }
+.rmine-info { flex:1; }
+.rmine-name { font-size:14px; font-weight:700; margin-bottom:2px; }
+.rmine-meta { font-size:12px; color:var(--ink3); }
+.rmine-stars { color:var(--brand); font-size:12px; }
+.menu-list { background:var(--surface); border-radius:var(--r-lg); border:1px solid var(--border); overflow:hidden; }
+.menu-item { display:flex; align-items:center; gap:12px; padding:14px 18px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s; font-size:14px; font-weight:600; }
+.menu-item:last-child { border-bottom:none; }
+.menu-item:hover { background:var(--bg); }
+.menu-item .mico { font-size:20px; width:28px; text-align:center; }
+.menu-item .marrow { margin-left:auto; color:var(--ink3); }
+.menu-item.danger { color:#CC2200; }
 </style>
 </head>
 <body>
@@ -218,7 +263,7 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
   <div class="sidebar-link active" onclick="showScreen('home')"><span class="icon">🏠</span> Inicio</div>
   <div class="sidebar-link" onclick="openMap()"><span class="icon">🗺️</span> Mapa</div>
   <div class="sidebar-link" onclick="showScreen('reviews')"><span class="icon">⭐</span> Reseñas</div>
-  <div class="sidebar-link" style="margin-top:auto"><span class="icon">👤</span> Perfil</div>
+  <div class="sidebar-link" style="margin-top:auto" onclick="showScreen('profile')"><span class="icon">👤</span> Perfil</div>
 </aside>
 
 <!-- HOME -->
@@ -383,12 +428,90 @@ body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:v
   <button class="fab">✏️ Escribir reseña</button>
 </div>
 
+
+<!-- PROFILE -->
+<div id="screen-profile" class="screen">
+  <div class="prof-hero">
+    <div class="prof-blob1"></div>
+    <div class="prof-blob2"></div>
+    <div class="prof-avatar">IS</div>
+    <div class="prof-name">Isaías Ortiz</div>
+    <div class="prof-handle">@isaiasortizc · Santiago, Chile</div>
+    <div class="prof-badges">
+      <span class="pbadge pbadge-brand">🍔 Burger lover</span>
+      <span class="pbadge pbadge-green">✅ Reseñador verificado</span>
+      <span class="pbadge pbadge-yellow">⭐ Top contribuidor</span>
+    </div>
+  </div>
+  <div class="prof-body">
+    <div class="prof-stats">
+      <div class="pstat"><div class="pstat-num">47</div><div class="pstat-lbl">Reseñas</div></div>
+      <div class="pstat"><div class="pstat-num">312</div><div class="pstat-lbl">Útiles</div></div>
+      <div class="pstat"><div class="pstat-num">4.6★</div><div class="pstat-lbl">Promedio</div></div>
+    </div>
+
+    <div class="prof-section">
+      <h3>Mis preferencias 🍽️</h3>
+      <div class="pref-grid">
+        <div class="pref-chip sel"><span>🍔</span>Burger</div>
+        <div class="pref-chip sel"><span>🍜</span>Ramen</div>
+        <div class="pref-chip"><span>🍕</span>Pizza</div>
+        <div class="pref-chip sel"><span>🍣</span>Sushi</div>
+        <div class="pref-chip"><span>🌮</span>Tacos</div>
+        <div class="pref-chip"><span>🥗</span>Sano</div>
+      </div>
+    </div>
+
+    <div class="prof-section">
+      <h3>Mis últimas reseñas</h3>
+      <div class="rev-mine">
+        <div class="rmine" onclick="goToReviews('La Burguesa')">
+          <div class="rmine-ico burger">🍔</div>
+          <div class="rmine-info">
+            <div class="rmine-name">La Burguesa</div>
+            <div class="rmine-meta">hace 2 días · <span class="rmine-stars">★★★★★</span></div>
+          </div>
+          <span style="color:var(--ink3);font-size:18px">›</span>
+        </div>
+        <div class="rmine" onclick="goToReviews('Verdi Pizza')">
+          <div class="rmine-ico pizza">🍕</div>
+          <div class="rmine-info">
+            <div class="rmine-name">Verdi Pizza</div>
+            <div class="rmine-meta">hace 1 semana · <span class="rmine-stars">★★★★☆</span></div>
+          </div>
+          <span style="color:var(--ink3);font-size:18px">›</span>
+        </div>
+        <div class="rmine" onclick="goToReviews('Sakura Sushi')">
+          <div class="rmine-ico sushi">🍣</div>
+          <div class="rmine-info">
+            <div class="rmine-name">Sakura Sushi</div>
+            <div class="rmine-meta">hace 2 semanas · <span class="rmine-stars">★★★★★</span></div>
+          </div>
+          <span style="color:var(--ink3);font-size:18px">›</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="prof-section">
+      <h3>Cuenta</h3>
+      <div class="menu-list">
+        <div class="menu-item"><span class="mico">🔔</span>Notificaciones<span class="marrow">›</span></div>
+        <div class="menu-item"><span class="mico">🔒</span>Privacidad<span class="marrow">›</span></div>
+        <div class="menu-item"><span class="mico">⭐</span>Favoritos<span class="marrow">›</span></div>
+        <div class="menu-item"><span class="mico">🎁</span>Referidos<span class="marrow">›</span></div>
+        <div class="menu-item"><span class="mico">❓</span>Ayuda<span class="marrow">›</span></div>
+        <div class="menu-item danger"><span class="mico">🚪</span>Cerrar sesión</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav" id="bnav">
   <div class="nav-item active" onclick="showScreen('home')"><span class="nav-icon">🏠</span><span>Inicio</span></div>
   <div class="nav-item" onclick="openMap()"><span class="nav-icon">🗺️</span><span>Mapa</span></div>
   <div class="nav-item" onclick="showScreen('reviews')"><span class="nav-icon">⭐</span><span>Reseñas</span></div>
-  <div class="nav-item"><span class="nav-icon">👤</span><span>Perfil</span></div>
+  <div class="nav-item" onclick="showScreen('profile')"><span class="nav-icon">👤</span><span>Perfil</span></div>
 </nav>
 
 <script>
@@ -414,7 +537,7 @@ function showScreen(name){
   if(name==='map'&&!lmap) initLeaflet();
 }
 
-function openMap(){ showScreen('map'); }
+function openMap(){ showScreen('map'); setTimeout(()=>{ if(lmap) lmap.invalidateSize(); },100); }
 function goHome(){ showScreen('home'); }
 function goToReviews(n){ document.getElementById('rev-title').textContent=n; showScreen('reviews'); }
 function filterCat(el){ document.querySelectorAll('.cat').forEach(c=>c.classList.remove('active')); el.classList.add('active'); }
